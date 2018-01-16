@@ -78,9 +78,10 @@ public class InvertedIndex {
         //com cada palavra relacionada com quais arquivos aparece e o numero de vezes
         //eu acredito que dê pra fazer com um HashMap<String, List<Tuple2<String, Integer>>
 
-        HashMap<String, List<Pair<String,String>>> indiceInvertido = null;
+        HashMap<String, List<Pair<String,Integer>>> indiceInvertido = null;
         BufferedReader leitura = null;
-        String arquivo = "", linha = "", palavra = "", contagem = "";
+        Integer contagem = 0;
+        String arquivo = "", linha = "", palavra = "";
         try{
             leitura = new BufferedReader(new FileReader("teste.txt"));
             while((linha = leitura.readLine()) != null){ //lê até o fim do texto
@@ -89,19 +90,31 @@ public class InvertedIndex {
                     linha = leitura.readLine(); //pega a primeira palavra e contagem desse arquivo
                 }
                 palavra = linha.split(" ")[0]; //split quebra a linha em um array de strings
-                contagem = linha.split(" ")[1];
-                Pair<String,String> entrada = new Pair(arquivo, contagem);
+                contagem = Integer.parseInt(linha.split(" ")[1]);
+                Pair<String,Integer> entrada = new Pair(arquivo, contagem);
+
                 if(!indiceInvertido.containsKey(palavra)){ //se a palavra ainda não está no mapa, tem que criar uma lista vazia para botar como valor
-                    List<Pair<String, String>> listaVazia = null;
+                    List<Pair<String, Integer>> listaVazia = null;
                     listaVazia.add(entrada);
                     indiceInvertido.put(palavra, listaVazia);
                 }
                 else{ //se já tiver uma lista com algum conteúdo para aquela palavra, só adiciona a nova entrada na lista
-                    //TO DO
+                    List<Pair<String,Integer>> lista = indiceInvertido.get(palavra); //pega a lista de arquivos que já contem esta palavra
+                    lista.add(entrada); //adiciona na lista o novo arquivo e o numero de vezes que a palavra aparece
+                    indiceInvertido.put(palavra, lista); //armazena a lista modificada no indice invertido
                 }
             }
         }catch(IOException e){}
 
+        System.out.println("TESTANDO");
+        //Printando o Hashmap indiceInvertido para verificar se esta correto
+        for (String chave: indiceInvertido.keySet()){
+            System.out.println("Palavra: " + chave);
+            List<Pair<String,Integer>> lista = indiceInvertido.get(chave);
+            for (Pair<String,Integer> p : lista){
+                System.out.println(p.getValue());
+            }
+        }
 
 
     }
