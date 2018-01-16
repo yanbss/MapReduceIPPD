@@ -8,7 +8,6 @@ import java.io.*;
 import java.util.*;
 import javafx.*;
 
-
 public class InvertedIndex {
 
     public static Tuple2<String, JavaPairRDD<String, Integer>>  readFilesSpark (String path, JavaSparkContext sc){
@@ -78,7 +77,7 @@ public class InvertedIndex {
         //com cada palavra relacionada com quais arquivos aparece e o numero de vezes
         //eu acredito que dê pra fazer com um HashMap<String, List<Tuple2<String, Integer>>
 
-        HashMap<String, List<Pair<String,Integer>>> indiceInvertido = null;
+        HashMap<String, List<Pair<String,Integer>>> indiceInvertido = new HashMap<>();
         BufferedReader leitura = null;
         Integer contagem = 0;
         String arquivo = "", linha = "", palavra = "";
@@ -91,10 +90,10 @@ public class InvertedIndex {
                 }
                 palavra = linha.split(" ")[0]; //split quebra a linha em um array de strings
                 contagem = Integer.parseInt(linha.split(" ")[1]);
-                Pair<String,Integer> entrada = new Pair(arquivo, contagem);
+                Pair<String, Integer> entrada = new Pair<>(arquivo, contagem);
 
                 if(!indiceInvertido.containsKey(palavra)){ //se a palavra ainda não está no mapa, tem que criar uma lista vazia para botar como valor
-                    List<Pair<String, Integer>> listaVazia = null;
+                    List<Pair<String, Integer>> listaVazia = new ArrayList<>();
                     listaVazia.add(entrada);
                     indiceInvertido.put(palavra, listaVazia);
                 }
@@ -110,9 +109,10 @@ public class InvertedIndex {
         //Printando o Hashmap indiceInvertido para verificar se esta correto
         for (String chave: indiceInvertido.keySet()){
             System.out.println("Palavra: " + chave);
-            List<Pair<String,Integer>> lista = indiceInvertido.get(chave);
+           List<Pair<String,Integer>> lista = indiceInvertido.get(chave);
             for (Pair<String,Integer> p : lista){
-                System.out.println(p.getValue());
+                System.out.println("  Arquivo:" + p.getKey());
+                System.out.println("  Contagem:" + p.getValue());
             }
         }
 
