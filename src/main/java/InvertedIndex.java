@@ -30,8 +30,8 @@ public class InvertedIndex {
 
     public static void main(String[] args) {
 
-        //String path = "/home/yan/Área de Trabalho/textos/";
-        String path = "../dataset/MeusTestes/";
+        String path = "/home/yan/Área de Trabalho/textos/";
+        //String path = "../dataset/MeusTestes/";
         File folder = new File(path);
         File[] listOfFiles = folder.listFiles();
         BufferedWriter escrita = null;
@@ -77,7 +77,7 @@ public class InvertedIndex {
         //com cada palavra relacionada com quais arquivos aparece e o numero de vezes
         //eu acredito que dê pra fazer com um HashMap<String, List<Tuple2<String, Integer>>
 
-        HashMap<String, List<Pair<String,Integer>>> indiceInvertido = new HashMap<>();
+        HashMap<String, ArrayList<Pair<String,Integer>>> indiceInvertido = new HashMap<>();
         BufferedReader leitura = null;
         Integer contagem = 0;
         String arquivo = "", linha = "", palavra = "";
@@ -93,28 +93,64 @@ public class InvertedIndex {
                 Pair<String, Integer> entrada = new Pair<>(arquivo, contagem);
 
                 if(!indiceInvertido.containsKey(palavra)){ //se a palavra ainda não está no mapa, tem que criar uma lista vazia para botar como valor
-                    List<Pair<String, Integer>> listaVazia = new ArrayList<>();
+                    ArrayList<Pair<String, Integer>> listaVazia = new ArrayList<>();
                     listaVazia.add(entrada);
                     indiceInvertido.put(palavra, listaVazia);
                 }
                 else{ //se já tiver uma lista com algum conteúdo para aquela palavra, só adiciona a nova entrada na lista
-                    List<Pair<String,Integer>> lista = indiceInvertido.get(palavra); //pega a lista de arquivos que já contem esta palavra
+                    ArrayList<Pair<String,Integer>> lista = indiceInvertido.get(palavra); //pega a lista de arquivos que já contem esta palavra
                     lista.add(entrada); //adiciona na lista o novo arquivo e o numero de vezes que a palavra aparece
                     indiceInvertido.put(palavra, lista); //armazena a lista modificada no indice invertido
                 }
             }
         }catch(IOException e){}
 
-        System.out.println("TESTANDO");
-        //Printando o Hashmap indiceInvertido para verificar se esta correto
-        for (String chave: indiceInvertido.keySet()){
-            System.out.println("Palavra: " + chave);
-           List<Pair<String,Integer>> lista = indiceInvertido.get(chave);
-            for (Pair<String,Integer> p : lista){
-                System.out.println("  Arquivo:" + p.getKey());
-                System.out.println("  Contagem:" + p.getValue());
-            }
+        //ORDENAÇÃO DAS LISTAS DO HASHMAP:
+        for(String chave: indiceInvertido.keySet()){
+            indiceInvertido.get(chave).sort(new Comparator<Pair<String,Integer>>(){
+                @Override
+                public int compare(Pair<String,Integer> p1, Pair<String,Integer> p2){
+                    if(p1.getValue() > p2.getValue()){
+                        return -1;
+                    } else if(p1.getValue().equals(p2.getValue())){
+                        return 0;
+                    } else {
+                        return 1;
+                    }
+
+                }
+            });
         }
+
+        //ESCRITA NO ARQUIVO FINAL DE ÍNDICE INVERTIDO:
+
+        try{
+            escrita = new BufferedWriter(new FileWriter("teste2.txt"));
+            for (String chave: indiceInvertido.keySet()) {
+                //System.out.println("Palavra: " + chave);
+                escrita.write("Palavra ");
+                escrita.write(chave);
+                escrita.write("\n\t");
+                List<Pair<String, Integer>> lista = indiceInvertido.get(chave);
+                for (Pair<String, Integer> p : lista) {
+                    //System.out.println("  Arquivo:" + p.getKey());
+                    escrita.write("Arquivo: ");
+                    escrita.write(p.getKey());
+                    escrita.write("\n\t");
+                    //System.out.println("  Contagem:" + p.getValue());
+                    escrita.write("Contagem: ");
+                    escrita.write(p.getValue().toString());
+                    escrita.write("\n\t");
+                }
+                escrita.write("\n");
+            }
+            escrita.close();
+        }
+        catch(IOException e){}
+
+        //System.out.println("TESTANDO");
+        //Printando o Hashmap indiceInvertido para verificar se esta correto
+
 
 
     }
