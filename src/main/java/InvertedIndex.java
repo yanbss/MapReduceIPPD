@@ -30,6 +30,7 @@ public class InvertedIndex {
 
     public static void main(String[] args) {
 
+        //String path = "/home/yan/Downloads/28/";
         String path = "/home/yan/Área de Trabalho/textos/";
         //String path = "../dataset/MeusTestes/";
         File folder = new File(path);
@@ -52,7 +53,7 @@ public class InvertedIndex {
                 String filePath = path + listOfFiles[i].getName();
                 fileCount = readFilesSpark(filePath, sc);
                 try{
-                    escrita.write("~ " + fileCount._1); //nome do arquivo com o ~ como "identificador" de arquivos
+                    escrita.write("~~" + fileCount._1); //nome do arquivo com o ~ como "identificador" de arquivos
                     escrita.write("\n");
                     //escrita.write(fileCount._2.toString()); testei só com os do twitter, mas eu acho que não funciona... resolvi garantir fazendo o que tá abaixo:
                     contagens = fileCount._2.collect(); //bota todos os elementos do JavaPairRDD em uma lista pra poder printar
@@ -85,7 +86,7 @@ public class InvertedIndex {
             leitura = new BufferedReader(new FileReader("teste.txt"));
             while((linha = leitura.readLine()) != null){ //lê até o fim do texto
                 if(linha.startsWith("~")) { //se a linha começa com ~ então é nome do arquivo
-                    arquivo = linha.split("~ ")[1]; //deixa arquivo como o nome do arquivo atual
+                    arquivo = linha.replace("~~", ""); //deixa arquivo como o nome do arquivo atual
                     linha = leitura.readLine(); //pega a primeira palavra e contagem desse arquivo
                 }
                 palavra = linha.split(" ")[0]; //split quebra a linha em um array de strings
