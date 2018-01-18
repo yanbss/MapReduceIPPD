@@ -31,8 +31,8 @@ public class InvertedIndex {
     public static void main(String[] args) {
 
         //String path = "/home/yan/Downloads/28/";
-        String path = "/home/yan/Área de Trabalho/textos/";
-        //String path = "../dataset/MeusTestes/";
+        //String path = "/home/yan/Área de Trabalho/textos/";
+        String path = "../dataset/shakespeare/";
         File folder = new File(path);
         File[] listOfFiles = folder.listFiles();
         BufferedWriter escrita = null;
@@ -129,17 +129,17 @@ public class InvertedIndex {
             escrita = new BufferedWriter(new FileWriter("teste2.txt"));
             for (String chave: indiceInvertido.keySet()) {
                 //System.out.println("Palavra: " + chave);
-                escrita.write("Palavra ");
+                //escrita.write("Palavra ");
                 escrita.write(chave);
                 escrita.write("\n\t");
                 List<Pair<String, Integer>> lista = indiceInvertido.get(chave);
                 for (Pair<String, Integer> p : lista) {
                     //System.out.println("  Arquivo:" + p.getKey());
-                    escrita.write("Arquivo: ");
+                    //escrita.write("Arquivo: ");
                     escrita.write(p.getKey());
                     escrita.write("\n\t");
                     //System.out.println("  Contagem:" + p.getValue());
-                    escrita.write("Contagem: ");
+                    //escrita.write("Contagem: ");
                     escrita.write(p.getValue().toString());
                     escrita.write("\n\t");
                 }
