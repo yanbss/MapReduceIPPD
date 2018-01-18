@@ -20,17 +20,6 @@ for folder in folders:
 	files = os.listdir()
 	number_folder = number_folder + 1
 	for file in files:
-		with open(file, "r") as fin:
-			data = fin.read().splitlines(True)
-			newname = ''.join(data[1:2]).split('\n')[0]
-			try:
-				newname = newname.replace(" ", "_")
-			except:
-				continue
-			try:
-				os.rename(file, newname)
-			except:
-				os.rename(file, file + str(randrange(0,1000)) )
-				number = number+1
+		os.rename(file, "wiki" + str(number) )
+		number = number+1
 	print(number_folder, "de", total_folder)
-print("Arquivos com nomes aleatorios: " + number)
